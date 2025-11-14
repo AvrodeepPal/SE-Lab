@@ -62,24 +62,18 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            .csrf(csrf -> csrf.disable())
-            .authorizeHttpRequests(authorize -> authorize
-                .requestMatchers("/auth/**").permitAll()                    // Public: Login/Register
-                .requestMatchers("/api/auth/**").permitAll()               // Public: API Auth
-                .requestMatchers("/flights/**").permitAll()                // Public: Flights
-                .requestMatchers("/api/flights/**").permitAll()            // Public: API Flights
-                .requestMatchers("/bookings/**").permitAll()               // Public: Bookings (optional)
-                .requestMatchers("/api/bookings/**").permitAll()           // Public: API Bookings (optional)
-                .anyRequest().authenticated()
-            )
-            .sessionManagement(session -> session
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            )
-            .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    http
+        .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+        .csrf(csrf -> csrf.disable())
+        .authorizeHttpRequests(authorize -> authorize
+            .anyRequest().permitAll()  // ALLOW EVERYTHING (testing only!)
+        )
+        .sessionManagement(session -> session
+            .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        );
 
-        return http.build();
-    }
+    return http.build();
+}
+
 }
